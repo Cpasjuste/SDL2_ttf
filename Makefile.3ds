@@ -1,0 +1,33 @@
+# SDL_ttf port by Cpasjuste
+
+TARGET_LIB = libSDL2_ttf.a
+OBJS = SDL_ttf.o
+
+PREFIX  = $(DEVKITPRO)/devkitARM/bin/arm-none-eabi
+CC      = $(PREFIX)-gcc
+AR      = $(PREFIX)-gcc-ar
+
+CFLAGS  = -DARM11 -D_3DS -Wall -O2 \
+	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft \
+	-ffunction-sections -fno-strict-aliasing -fomit-frame-pointer \
+	-Wno-unused-but-set-variable \
+	-I$(DEVKITPRO)/portlibs/3ds/include/SDL2 \
+	-I$(DEVKITPRO)/portlibs/armv6k/include/freetype2
+
+CFLAGS	+= -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" \
+		-DPACKAGE_BUGREPORT=\"\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 \
+		-DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 \
+		-DHAVE_UNISTD_H=1 -DLT_OBJDIR=\".libs/\" -DPACKAGE=\"SDL_ttf\" -DVERSION=\"2.0.14\" \
+		-DHAVE_ALLOCA_H=1 -DHAVE_ALLOCA=1 -DX_DISPLAY_MISSING=1
+
+$(TARGET_LIB): $(OBJS)
+	$(AR) rcs $@ $^
+
+clean:
+	@rm -rf $(TARGET_LIB) $(OBJS)
+
+install: $(TARGET_LIB)
+	@cp  $(TARGET_LIB) $(DEVKITPRO)/portlibs/3ds/lib
+	@mkdir -p "$(DEVKITPRO)/portlibs/3ds/include/SDL2"
+	@cp SDL_ttf.h "$(DEVKITPRO)/portlibs/3ds/include/SDL2"
+	@echo "Installed!"
