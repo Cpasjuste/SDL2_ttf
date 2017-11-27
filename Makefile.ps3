@@ -3,16 +3,18 @@
 TARGET_LIB = libSDL2_ttf.a
 OBJS = SDL_ttf.o
 
-PREFIX  = $(DEVKITPRO)/devkitARM/bin/arm-none-eabi
+PREFIX  = $(PSL1GHT)/ppu/bin/powerpc64-ps3-elf
 CC      = $(PREFIX)-gcc
-AR      = $(PREFIX)-gcc-ar
+AR      = $(PREFIX)-ar
 
-CFLAGS  = -DARM11 -D_3DS -Wall -O2 \
-	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft \
+CFLAGS  = -D__PS3__ -Wall -O2 \
+	-mcpu=cell \
 	-ffunction-sections -fno-strict-aliasing -fomit-frame-pointer \
 	-Wno-unused-but-set-variable \
-	-I$(DEVKITPRO)/portlibs/3ds/include/SDL2 \
-	-I$(DEVKITPRO)/portlibs/armv6k/include/freetype2
+	-I${PSL1GHT}/ppu/include \
+	-I${PSL1GHT}/portlibs/ppu/include \
+	-I${PSL1GHT}/portlibs/ppu/include/SDL2 \
+	-I${PSL1GHT}/portlibs/ppu/include/freetype2
 
 CFLAGS	+= -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" \
 		-DPACKAGE_BUGREPORT=\"\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 \
@@ -27,7 +29,7 @@ clean:
 	@rm -rf $(TARGET_LIB) $(OBJS)
 
 install: $(TARGET_LIB)
-	@cp  $(TARGET_LIB) $(DEVKITPRO)/portlibs/3ds/lib
-	@mkdir -p "$(DEVKITPRO)/portlibs/3ds/include/SDL2"
-	@cp SDL_ttf.h "$(DEVKITPRO)/portlibs/3ds/include/SDL2"
+	@cp  $(TARGET_LIB) ${PSL1GHT}/portlibs/ppu/lib
+	@mkdir -p "${PSL1GHT}/portlibs/ppu/include/SDL2"
+	@cp SDL_ttf.h "${PSL1GHT}/portlibs/ppu/include/SDL2"
 	@echo "Installed!"
